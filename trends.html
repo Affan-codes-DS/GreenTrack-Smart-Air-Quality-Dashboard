@@ -4,9 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AQI Trends</title>
-  <link rel="stylesheet" href="style.css" />
+  
+  <!-- Inline theme application - MUST be before any stylesheets -->
+  <script>
+    (function() {
+      const theme = localStorage.getItem('greentrack-theme') || 'default';
+      const html = document.documentElement;
+      if (theme !== 'default') html.classList.add('theme-' + theme);
+    })();
+  </script>
+  
+  <!-- Cache clearing script - must load first -->
+  <script src="clear-cache.js"></script>
+  <link rel="stylesheet" href="style.css?v=3.0.2" />
+  <link rel="stylesheet" href="themes.css?v=3.0.2" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script src="nav.js" defer></script>
+  <script src="theme-manager.js?v=3.0.2"></script>
+  <script src="nav.js?v=3.0.2" defer></script>
 </head>
 <body>
   <div class="container">
@@ -16,11 +30,11 @@
         <ul class="nav-links">
           <li><a href="index.html">Dashboard</a></li>
           <li><a href="trends.html">Trends</a></li>
+          <li><a href="map.html">Map</a></li>
+          <li><a href="news.html">News</a></li>
           <li><a href="pollutants.html">Pollutants</a></li>
           <li><a href="alerts.html">Alerts</a></li>
           <li><a href="cities.html">Cities</a></li>
-          <li><a href="map.html">Map</a></li>
-          <li><a href="news.html">News</a></li>
         </ul>
       </nav>
   <h1>Trends</h1>
@@ -47,7 +61,10 @@
     </footer>
   </div>
 
-  <script src="utils.js"></script>
-  <script src="trends.js"></script>
+  <script src="utils.js?v=3.0.2"></script>
+  <script src="trends.js?v=3.0.2"></script>
+  
+  <!-- Service Worker Registration -->
+  <script src="sw-register.js?v=3.0.2"></script>
 </body>
 </html>

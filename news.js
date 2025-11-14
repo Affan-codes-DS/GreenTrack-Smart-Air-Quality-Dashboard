@@ -24,18 +24,8 @@ class NewsManager {
     }
 
     setupTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        document.body.classList.toggle('theme-light', savedTheme === 'light');
-
-        const themeBtn = document.getElementById('themeToggle');
-        if (themeBtn) {
-            themeBtn.addEventListener('click', () => {
-                const current = document.body.classList.contains('theme-light') ? 'light' : 'dark';
-                const next = current === 'light' ? 'dark' : 'light';
-                document.body.classList.toggle('theme-light', next === 'light');
-                localStorage.setItem('theme', next);
-            });
-        }
+        // Theme is now handled by ThemeManager (light mode removed)
+        // Color themes are managed via theme-manager.js
     }
 
     setupEventListeners() {

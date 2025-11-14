@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cache Status - GreenTrack</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .status-card {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .status-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .status-card pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            margin: 10px 0;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 10px 10px 10px 0;
+            transition: transform 0.2s;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin: 5px 5px 5px 0;
+        }
+
+        .badge.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge.warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge.info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Cache & Service Worker Status</h1>
+        <p style="color: #666; margin-bottom: 20px;">Real-time monitoring of cache and service worker state</p>
+
+        <div>
+            <button class="btn" onclick="refreshStatus()">🔄 Refresh Status</button>
+            <button class="btn" onclick="clearAll()">🗑️ Clear All</button>
+            <button class="btn" onclick="goToDashboard()">← Dashboard</button>
+        </div>
+
+        <div id="content">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Loading status...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadStatus() {
+            const content = document.getElementById('content');
+            let html = '';
+
+            try {
+                // 1. Cache Status
+                html += '<div class="status-card">';
+                html += '<h3>💾 Cache Status</h3>';
+                
+                if ('caches' in window) {
+                    const cacheNames = await caches.keys();
+                    const currentVersion = 'v3.0.0';
+                    const oldCaches = cacheNames.filter(name => !name.includes(currentVersion));
+                    
+                    html += `<p><span class="badge ${cacheNames.length > 0 ? 'success' : 'warning'}">
+                        ${cacheNames.length} cache(s) found
+                    </span></p>`;
+                    
+                    if (oldCaches.length > 0) {
+                        html += `<p><span class="badge warning">⚠️ ${oldCaches.length} old cache(s) detected</span></p>`;
+                    }
+                    
+                    html += '<table><thead><tr><th>Cache Name</th><th>Status</th></tr></thead><tbody>';
+                    for (const name of cacheNames) {
+                        const isOld = !name.includes(currentVersion);
+                        html += `<tr>
+                            <td>${name}</td>
+                            <td><span class="badge ${isOld ? 'warning' : 'success'}">${isOld ? 'Old' : 'Current'}</span></td>
+                        </tr>`;
+                    }
+                    html += '</tbody></table>';
+                } else {
+                    html += '<p><span class="badge error">❌ Cache API not supported</span></p>';
+                }
+                html += '</div>';
+
+                // 2. Service Worker Status
+                html += '<div class="status-card">';
+                html += '<h3>⚙️ Service Worker Status</h3>';
+                
+                if ('serviceWorker' in navigator) {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    
+                    html += `<p><span class="badge ${registrations.length > 0 ? 'success' : 'warning'}">
+                        ${registrations.length} service worker(s) registered
+                    </span></p>`;
+                    
+                    for (const reg of registrations) {
+                        const state = reg.active ? 'Active' : reg.installing ? 'Installing' : reg.waiting ? 'Waiting' : 'Unknown';
+                        html += `<p><span class="badge info">${state}</span> Scope: ${reg.scope}</p>`;
+                    }
+                } else {
+                    html += '<p><span class="badge error">❌ Service Worker not supported</span></p>';
+                }
+                html += '</div>';
+
+                // 3. Storage Status
+                html += '<div class="status-card">';
+                html += '<h3>💿 Storage Status</h3>';
+                
+                const cacheVersion = localStorage.getItem('cacheVersion');
+                const themeMode = localStorage.getItem('themeMode');
+                const themeName = localStorage.getItem('themeName');
+                
+                html += '<table><thead><tr><th>Key</th><th>Value</th></tr></thead><tbody>';
+                html += `<tr><td>Cache Version</td><td><span class="badge ${cacheVersion === 'v3.0.0' ? 'success' : 'warning'}">${cacheVersion || 'Not Set'}</span></td></tr>`;
+                html += `<tr><td>Theme Mode</td><td>${themeMode || 'Not Set'}</td></tr>`;
+                html += `<tr><td>Theme Name</td><td>${themeName || 'Not Set'}</td></tr>`;
+                html += `<tr><td>localStorage Items</td><td>${localStorage.length}</td></tr>`;
+                html += `<tr><td>sessionStorage Items</td><td>${sessionStorage.length}</td></tr>`;
+                html += '</tbody></table>';
+                html += '</div>';
+
+                // 4. Current Page Info
+                html += '<div class="status-card">';
+                html += '<h3>📄 Current Page Info</h3>';
+                html += '<pre>';
+                html += `URL: ${window.location.href}\n`;
+                html += `Protocol: ${window.location.protocol}\n`;
+                html += `Host: ${window.location.host}\n`;
+                html += `Path: ${window.location.pathname}\n`;
+                html += `User Agent: ${navigator.userAgent}`;
+                html += '</pre>';
+                html += '</div>';
+
+                // 5. Recommended Actions
+                const hasOldCaches = (await caches.keys()).some(name => !name.includes('v3.0.0'));
+                if (hasOldCaches || cacheVersion !== 'v3.0.0') {
+                    html += '<div class="status-card" style="border-left-color: #ffc107;">';
+                    html += '<h3>⚠️ Recommended Actions</h3>';
+                    html += '<p>Old caches detected. It is recommended to:</p>';
+                    html += '<ol style="margin-left: 20px; margin-top: 10px;">';
+                    html += '<li>Click "🗑️ Clear All" button above</li>';
+                    html += '<li>Hard refresh the page (Ctrl+Shift+R)</li>';
+                    html += '<li>Check this status page again</li>';
+                    html += '</ol>';
+                    html += '</div>';
+                } else {
+                    html += '<div class="status-card" style="border-left-color: #28a745;">';
+                    html += '<h3>✅ All Clear!</h3>';
+                    html += '<p>Your cache and service worker are up to date. You\'re running version 3.0.0.</p>';
+                    html += '</div>';
+                }
+
+            } catch (error) {
+                html = `<div class="status-card" style="border-left-color: #dc3545;">
+                    <h3>❌ Error Loading Status</h3>
+                    <p>${error.message}</p>
+                </div>`;
+            }
+
+            content.innerHTML = html;
+        }
+
+        async function clearAll() {
+            if (confirm('This will clear all caches and service workers. Continue?')) {
+                try {
+                    // Clear caches
+                    const cacheNames = await caches.keys();
+                    await Promise.all(cacheNames.map(name => caches.delete(name)));
+                    
+                    // Unregister service workers
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    await Promise.all(registrations.map(reg => reg.unregister()));
+                    
+                    // Clear storage
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    
+                    alert('✅ All cleared! Reloading...');
+                    window.location.reload();
+                } catch (error) {
+                    alert('❌ Error: ' + error.message);
+                }
+            }
+        }
+
+        function refreshStatus() {
+            loadStatus();
+        }
+
+        function goToDashboard() {
+            window.location.href = 'index.html';
+        }
+
+        // Load on page load
+        window.addEventListener('load', loadStatus);
+    </script>
+</body>
+</html>

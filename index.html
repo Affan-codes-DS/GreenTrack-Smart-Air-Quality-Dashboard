@@ -7,14 +7,27 @@
     <meta name="keywords" content="GreenTrack, AQI, air quality, pollution, health, environment, smart dashboard">
     <meta name="theme-color" content="#667eea">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="manifest" href="manifest.json">
-    <title>GreenTrack — Smart Pollution & Air Quality Dashboard</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="modern-styles.css">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.json">
+  <title>GreenTrack — Smart Pollution & Air Quality Dashboard</title>
+  
+  <!-- Inline theme application - MUST be before any stylesheets -->
+  <script>
+    (function() {
+      const theme = localStorage.getItem('greentrack-theme') || 'default';
+      const html = document.documentElement;
+      if (theme !== 'default') html.classList.add('theme-' + theme);
+    })();
+  </script>
+  
+  <!-- Cache clearing script - must load first -->
+  <script src="clear-cache.js"></script>    <link rel="stylesheet" href="style.css?v=3.0.2">
+    <link rel="stylesheet" href="modern-styles.css?v=3.0.2">
+    <link rel="stylesheet" href="themes.css?v=3.0.2">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script src="utils.js"></script>
-    <script src="nav.js" defer></script>
+    <script src="utils.js?v=3.0.2"></script>
+    <script src="theme-manager.js?v=3.0.2"></script>
+    <script src="nav.js?v=3.0.2" defer></script>
 </head>
 <body>
     <!-- Skip to main content link for accessibility -->
@@ -33,22 +46,14 @@
             <ul class="nav-menu">
                 <li><a href="index.html" class="nav-link">Dashboard</a></li>
                 <li><a href="trends.html" class="nav-link">Trends</a></li>
+                <li><a href="map.html" class="nav-link">Map</a></li>
+                <li><a href="news.html" class="nav-link">News</a></li>
                 <li><a href="pollutants.html" class="nav-link">Pollutants</a></li>
                 <li><a href="alerts.html" class="nav-link">Alerts</a></li>
                 <li><a href="cities.html" class="nav-link">Cities</a></li>
-                <li><a href="map.html" class="nav-link">Map</a></li>
-                <li><a href="news.html" class="nav-link">News</a></li>
             </ul>
             
             <div class="nav-actions">
-                <button id="themeToggle" class="icon-button" aria-label="Toggle dark/light theme" title="Toggle theme">
-                    <svg id="iconMoon" class="theme-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
-                    </svg>
-                    <svg id="iconSun" class="theme-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="display:none">
-                        <path d="M12 3v3m0 12v3m9-9h-3M6 12H3m15.364 6.364l-2.121-2.121M8.757 8.757L6.636 6.636m12.728 0l-2.121 2.121M8.757 15.243l-2.121 2.121M12 8a4 4 0 100 8 4 4 0 000-8z"/>
-                    </svg>
-                </button>
                 <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle mobile menu">
                     <span></span>
                     <span></span>
@@ -1284,7 +1289,10 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
-    <script src="modern-script.js"></script>
+    <script src="script.js?v=3.0.2"></script>
+    <script src="modern-script.js?v=3.0.2"></script>
+    
+    <!-- Service Worker Registration -->
+    <script src="sw-register.js?v=3.0.2"></script>
 </body>
 </html>

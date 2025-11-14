@@ -329,11 +329,6 @@ class AQIMap {
             showToast('Map data refreshed', 'success');
         });
 
-        // Theme toggle
-        document.getElementById('themeToggle').addEventListener('click', () => {
-            this.updateMapTheme();
-        });
-
         // Listen for theme changes
         window.addEventListener('theme-changed', () => {
             this.updateMapTheme();
@@ -405,62 +400,130 @@ class AQIMap {
             showToast('Fetching air quality data...', 'info', 2000);
             
             try {
-                // Try to get nearest city data or fetch from coordinates
-                const nearestCity = this.findNearestCity(latitude, longitude);
-                let locationData;
+                // Fetch AQI data using geo-coordinates API endpoint
+                const geoUrl = `https://api.waqi.info/feed/geo:${latitude};${longitude}/?token=b784e806f701bc0a79adaf50855b32f8acc0d234`;
+                const response = await fetch(geoUrl);
+                const data = await response.json();
                 
-                if (nearestCity && nearestCity.distance < 50) {
-                    // Use nearest city data if within 50km
-                    locationData = this.cityData[nearestCity.name];
+                if (data.status === 'ok' && data.data) {
+                    const rawData = data.data;
+                    
+                    // Process the AQI data
+                    const locationData = {
+                        aqi: rawData.aqi || 0,
+                        city: rawData.city?.name || 'Your Location',
+                        time: rawData.time?.iso || new Date().toISOString(),
+                        pollutants: {
+                            pm25: rawData.iaqi?.pm25?.v || 0,
+                            pm10: rawData.iaqi?.pm10?.v || 0,
+                            o3: rawData.iaqi?.o3?.v || 0,
+                            no2: rawData.iaqi?.no2?.v || 0,
+                            so2: rawData.iaqi?.so2?.v || 0,
+                            co: rawData.iaqi?.co?.v || 0
+                        },
+                        dominantPollutant: rawData.dominentpol || 'pm25',
+                        temp: rawData.iaqi?.t?.v || null,
+                        humidity: rawData.iaqi?.h?.v || null,
+                        pressure: rawData.iaqi?.p?.v || null,
+                        wind: rawData.iaqi?.w?.v || null
+                    };
+                    
+                    const aqiLevel = AQI.getAQILevel(locationData.aqi);
+                    const nearestCity = this.findNearestCity(latitude, longitude);
+                    
+                    // Bind popup with full AQI info
+                    this.userLocationMarker.bindPopup(`
+                        <div class="popup-content">
+                            <h3>📍 ${locationData.city}</h3>
+                            <div class="popup-aqi" style="background: ${this.getMarkerColor(aqiLevel.class)}; color: white; padding: 16px; border-radius: 12px; margin: 12px 0; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                                <div style="font-size: 2.5rem; font-weight: 700; margin-bottom: 4px;">${locationData.aqi}</div>
+                                <div style="font-size: 1rem; font-weight: 600; opacity: 0.95;">${aqiLevel.label}</div>
+                                <div style="font-size: 0.85rem; opacity: 0.85; margin-top: 4px;">Dominant: ${locationData.dominantPollutant.toUpperCase()}</div>
+                            </div>
+                            <div class="popup-pollutants" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0; padding: 12px; background: var(--bg-secondary, #f8f9fa); border-radius: 8px;">
+                                <div style="padding: 6px;"><strong>PM2.5:</strong> ${locationData.pollutants.pm25 || '--'} μg/m³</div>
+                                <div style="padding: 6px;"><strong>PM10:</strong> ${locationData.pollutants.pm10 || '--'} μg/m³</div>
+                                <div style="padding: 6px;"><strong>O₃:</strong> ${locationData.pollutants.o3 || '--'} μg/m³</div>
+                                <div style="padding: 6px;"><strong>NO₂:</strong> ${locationData.pollutants.no2 || '--'} μg/m³</div>
+                            </div>
+                            ${locationData.temp ? `<div style="text-align: center; margin: 8px 0; font-size: 0.95rem;">🌡️ Temperature: ${locationData.temp}°C</div>` : ''}
+                            <div class="popup-meta" style="font-size: 0.85rem; color: var(--text-muted, #666); border-top: 1px solid var(--border-color, #e0e0e0); padding-top: 8px; margin-top: 8px;">
+                                <div>📍 ${latitude.toFixed(4)}°, ${longitude.toFixed(4)}°</div>
+                                ${nearestCity ? `<div>📌 Near ${nearestCity.name} (${nearestCity.distance.toFixed(1)} km away)</div>` : ''}
+                                <div>🕒 Updated: ${new Date(locationData.time).toLocaleTimeString()}</div>
+                            </div>
+                        </div>
+                    `, {
+                        maxWidth: 320,
+                        className: 'aqi-popup'
+                    }).openPopup();
+                    
+                    showToast(`AQI: ${locationData.aqi} (${aqiLevel.label}) at ${locationData.city}`, 'success', 4000);
                 } else {
-                    // Fetch fresh data for these coordinates
-                    const result = await AQI.fetchAQIData(`${latitude},${longitude}`);
-                    locationData = result.data;
+                    throw new Error('No AQI data available for this location');
                 }
-                
-                const aqiInfo = AQI.getAQIInfo(locationData.aqi);
-                
-                // Bind popup with full AQI info
-                this.userLocationMarker.bindPopup(`
-                    <div class="popup-content">
-                        <h3>📍 Your Location</h3>
-                        <div class="popup-aqi" style="background: ${aqiInfo.color}; color: white; padding: 16px; border-radius: 12px; margin: 12px 0; text-align: center;">
-                            <div style="font-size: 2.5rem; font-weight: 700; margin-bottom: 4px;">${locationData.aqi}</div>
-                            <div style="font-size: 1rem; font-weight: 600;">${aqiInfo.label}</div>
-                        </div>
-                        <div class="popup-pollutants">
-                            <div><strong>PM2.5:</strong> ${locationData.pollutants.pm25} μg/m³</div>
-                            <div><strong>PM10:</strong> ${locationData.pollutants.pm10} μg/m³</div>
-                            <div><strong>O₃:</strong> ${locationData.pollutants.o3} μg/m³</div>
-                            <div><strong>NO₂:</strong> ${locationData.pollutants.no2} μg/m³</div>
-                        </div>
-                        <div class="popup-meta">
-                            <div>Lat: ${latitude.toFixed(4)}, Lng: ${longitude.toFixed(4)}</div>
-                            ${nearestCity ? `<div>Near ${nearestCity.name} (${nearestCity.distance.toFixed(1)}km)</div>` : ''}
-                        </div>
-                    </div>
-                `, {
-                    maxWidth: 300,
-                    className: 'aqi-popup'
-                }).openPopup();
-                
-                showToast('Location air quality loaded! 📍', 'success');
             } catch (error) {
                 console.error('Error fetching location AQI:', error);
-                // Fallback to basic popup
-                this.userLocationMarker.bindPopup(`
-                    <div class="popup-content">
-                        <h3>📍 Your Location</h3>
-                        <div style="margin-top: 8px; font-size: 0.9rem;">
-                            <div><strong>Latitude:</strong> ${latitude.toFixed(4)}</div>
-                            <div><strong>Longitude:</strong> ${longitude.toFixed(4)}</div>
-                            <div style="margin-top: 8px; color: #ef4444;">Unable to fetch air quality data</div>
+                
+                // Try to use nearest city as fallback
+                const nearestCity = this.findNearestCity(latitude, longitude);
+                if (nearestCity && nearestCity.distance < 100 && this.cityData[nearestCity.name]) {
+                    const cityData = this.cityData[nearestCity.name];
+                    const aqiLevel = AQI.getAQILevel(cityData.aqi);
+                    
+                    this.userLocationMarker.bindPopup(`
+                        <div class="popup-content">
+                            <h3>📍 Your Location</h3>
+                            <div style="padding: 12px; background: #fff3cd; border-radius: 8px; margin: 12px 0; font-size: 0.9rem;">
+                                ℹ️ Showing data from nearest city
+                            </div>
+                            <div class="popup-aqi" style="background: ${this.getMarkerColor(aqiLevel.class)}; color: white; padding: 16px; border-radius: 12px; margin: 12px 0; text-align: center;">
+                                <div style="font-size: 2rem; font-weight: 700;">${cityData.aqi}</div>
+                                <div style="font-size: 0.95rem; font-weight: 600;">${aqiLevel.label}</div>
+                            </div>
+                            <div style="text-align: center; margin: 12px 0;">
+                                <strong>📌 ${nearestCity.name}</strong><br>
+                                <span style="font-size: 0.9rem; color: var(--text-muted, #666);">${nearestCity.distance.toFixed(1)} km away</span>
+                            </div>
+                            <div class="popup-pollutants" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 0.9rem;">
+                                <div><strong>PM2.5:</strong> ${cityData.pollutants.pm25 || '--'}</div>
+                                <div><strong>PM10:</strong> ${cityData.pollutants.pm10 || '--'}</div>
+                                <div><strong>O₃:</strong> ${cityData.pollutants.o3 || '--'}</div>
+                                <div><strong>NO₂:</strong> ${cityData.pollutants.no2 || '--'}</div>
+                            </div>
+                            <div class="popup-meta" style="margin-top: 12px; font-size: 0.85rem; color: var(--text-muted, #666);">
+                                <div>📍 ${latitude.toFixed(4)}°, ${longitude.toFixed(4)}°</div>
+                            </div>
                         </div>
-                    </div>
-                `, {
-                    maxWidth: 250,
-                    className: 'aqi-popup'
-                }).openPopup();
+                    `, {
+                        maxWidth: 300,
+                        className: 'aqi-popup'
+                    }).openPopup();
+                    
+                    showToast(`Showing AQI from ${nearestCity.name} (${nearestCity.distance.toFixed(1)}km away)`, 'info', 4000);
+                } else {
+                    // Complete fallback - just show coordinates
+                    this.userLocationMarker.bindPopup(`
+                        <div class="popup-content">
+                            <h3>📍 Your Location</h3>
+                            <div style="padding: 12px; background: #fee; border-radius: 8px; margin: 12px 0; color: #c00;">
+                                ⚠️ Unable to fetch air quality data
+                            </div>
+                            <div style="margin-top: 12px; font-size: 0.95rem;">
+                                <div><strong>Latitude:</strong> ${latitude.toFixed(6)}°</div>
+                                <div><strong>Longitude:</strong> ${longitude.toFixed(6)}°</div>
+                            </div>
+                            <div style="margin-top: 12px; font-size: 0.85rem; color: var(--text-muted, #666);">
+                                ${nearestCity ? `Nearest city: ${nearestCity.name} (${nearestCity.distance.toFixed(1)} km)` : 'No nearby monitoring stations found'}
+                            </div>
+                        </div>
+                    `, {
+                        maxWidth: 280,
+                        className: 'aqi-popup'
+                    }).openPopup();
+                    
+                    showToast('No air quality data available for your location', 'error', 4000);
+                }
             }
 
             // Animate to user location
@@ -486,23 +549,12 @@ class AQIMap {
     }
 
     updateMapTheme() {
-        const isDark = !document.body.classList.contains('theme-light');
-
-        // Update map tiles for theme
-        if (isDark) {
-            // Dark theme tiles
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                attribution: '© OpenStreetMap contributors © CARTO',
-                subdomains: 'abcd',
-                maxZoom: 19
-            }).addTo(this.map);
-        } else {
-            // Light theme tiles
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors',
-                maxZoom: 19
-            }).addTo(this.map);
-        }
+        // Always use dark theme tiles (light mode removed)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '© OpenStreetMap contributors © CARTO',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(this.map);
     }
 
     findNearestCity(lat, lng) {
@@ -600,21 +652,6 @@ function initializeMapPage() {
 
     // Wait a bit for all scripts to load
     setTimeout(() => {
-        // Theme setup
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        document.body.classList.toggle('theme-light', savedTheme === 'light');
-
-        const themeBtn = document.getElementById('themeToggle');
-        if (themeBtn) {
-            themeBtn.addEventListener('click', () => {
-                const current = document.body.classList.contains('theme-light') ? 'light' : 'dark';
-                const next = current === 'light' ? 'dark' : 'light';
-                document.body.classList.toggle('theme-light', next === 'light');
-                localStorage.setItem('theme', next);
-                window.dispatchEvent(new CustomEvent('theme-changed', { detail: { mode: next } }));
-            });
-        }
-
         // Check if Leaflet is loaded
         if (typeof L === 'undefined') {
             console.error('Leaflet library failed to load');

@@ -9,7 +9,7 @@ function getChartTheme() {
   const grid = getVar('--border-color', 'rgba(42, 51, 89, 0.5)');
   const lineColor = '#667eea';
   const fillColor = 'rgba(102, 126, 234, 0.10)';
-  const tooltipBg = document.body.classList.contains('theme-light') ? 'rgba(255,255,255,0.95)' : 'rgba(26,33,64,0.95)';
+  const tooltipBg = 'rgba(26,33,64,0.95)'; // Always dark mode
   const pointBorder = '#ffffff';
   return { text, textMuted, grid, lineColor, fillColor, tooltipBg, pointBorder };
 }

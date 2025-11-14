@@ -635,17 +635,7 @@ function handleFetchError(error) {
 // ============================================
 // Theme & Skeleton Utilities
 // ============================================
-function applyTheme(mode) {
-    const isLight = mode === 'light';
-    document.body.classList.toggle('theme-light', isLight);
-    // swap icons if present
-    const sun = document.getElementById('iconSun');
-    const moon = document.getElementById('iconMoon');
-    if (sun && moon) {
-        sun.style.display = isLight ? 'inline' : 'none';
-        moon.style.display = isLight ? 'none' : 'inline';
-    }
-}
+// Theme is now handled by ThemeManager (light mode removed)
 
 function setSkeleton(active) {
     const aqiVal = document.getElementById('aqiValue');
@@ -850,10 +840,6 @@ function setupKeyboardShortcuts() {
                 document.getElementById('fetchBtn')?.click();
                 showToast('Refreshing data...', 'info', 1500);
                 break;
-            case 't':
-                e.preventDefault();
-                document.getElementById('themeToggle')?.click();
-                break;
             case 'c':
                 e.preventDefault();
                 window.location.href = 'cities.html' + (location.search || '');
@@ -1036,24 +1022,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Render favorites
     renderFavorites();
     
-    // Theme: apply saved preference
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    applyTheme(savedTheme);
-    const themeBtn = document.getElementById('themeToggle');
-    if (themeBtn) {
-        themeBtn.addEventListener('click', () => {
-            const current = document.body.classList.contains('theme-light') ? 'light' : 'dark';
-            const next = current === 'light' ? 'dark' : 'light';
-            applyTheme(next);
-            localStorage.setItem('theme', next);
-            // Update chart theme immediately
-            if (trendChart) {
-                applyChartTheme(trendChart);
-            }
-            // Notify other pages/components
-            window.dispatchEvent(new CustomEvent('theme-changed', { detail: { mode: next } }));
-        });
-    }
+    // Theme is now handled by ThemeManager (light mode removed)
+    // Listen for theme changes to update charts
+    window.addEventListener('theme-changed', () => {
+        if (trendChart) {
+            applyChartTheme(trendChart);
+        }
+    });
     
     // Determine city from URL or saved preference
     const params = new URLSearchParams(location.search);
@@ -1195,8 +1170,8 @@ function getChartTheme() {
     const grid = getCssVar('--border-color', 'rgba(42, 51, 89, 0.5)');
     const fill = 'rgba(102, 126, 234, 0.10)';
     const lineColor = '#667eea';
-    const pointBorder = document.body.classList.contains('theme-light') ? '#ffffff' : '#ffffff';
-    const tooltipBg = document.body.classList.contains('theme-light') ? 'rgba(255,255,255,0.95)' : 'rgba(26,33,64,0.95)';
+    const pointBorder = '#ffffff';
+    const tooltipBg = 'rgba(26,33,64,0.95)'; // Always dark mode
     return { text, textMuted, grid, fillColor: fill, lineColor, pointBorder, tooltipBg };
 }
 

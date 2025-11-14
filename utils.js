@@ -251,6 +251,25 @@
     return qCity || null;
   }
 
+  function getAQIInfo(aqi) {
+    // Get AQI level and return detailed info with color
+    const level = getAQILevel(aqi);
+    const colors = {
+      'good': '#00e400',
+      'moderate': '#ffff00',
+      'unhealthy-sensitive': '#ff7e00',
+      'unhealthy': '#ff0000',
+      'very-unhealthy': '#8f3f97',
+      'hazardous': '#7e0023'
+    };
+    
+    return {
+      ...level,
+      color: colors[level.class] || colors.hazardous,
+      value: aqi
+    };
+  }
+
   global.AQI = {
     CONFIG,
     LEVELS,
@@ -258,6 +277,7 @@
     processAQIData,
     getMockData,
     getAQILevel,
+    getAQIInfo,
     generateMockHistoricalData,
     getCityFromQuery
   };

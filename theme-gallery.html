@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GreenTrack Theme Gallery - Explore all available color themes">
+    <title>Theme Gallery - GreenTrack</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="modern-styles.css">
+    <link rel="stylesheet" href="themes.css">
+    <style>
+        .theme-gallery {
+            padding: 4rem 2rem;
+        }
+        
+        .gallery-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .gallery-header h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+        
+        .gallery-header p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+        }
+        
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .theme-preview-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .theme-preview-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .theme-preview-card:hover::before {
+            left: 100%;
+        }
+        
+        .theme-preview-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-xl), 0 0 40px var(--accent-primary);
+        }
+        
+        .theme-preview-card.active {
+            border-color: var(--accent-primary);
+            border-width: 3px;
+            box-shadow: var(--shadow-xl), 0 0 60px var(--accent-primary);
+        }
+        
+        .theme-preview-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+        
+        .theme-preview-header h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .theme-active-badge {
+            display: none;
+            background: var(--gradient-primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .theme-preview-card.active .theme-active-badge {
+            display: block;
+        }
+        
+        .theme-color-palette {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .color-swatch {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .color-swatch:hover {
+            transform: scale(1.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .theme-preview-content {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .preview-aqi {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--accent-primary);
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .preview-label {
+            text-align: center;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.875rem;
+        }
+        
+        .theme-apply-btn {
+            width: 100%;
+            padding: 0.875rem;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: var(--radius-md);
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-apply-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+        
+        .theme-apply-btn:active {
+            transform: translateY(0);
+        }
+        
+        .back-to-dashboard {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+        
+        .back-to-dashboard:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-primary);
+            transform: translateX(-4px);
+        }
+        
+        .theme-info {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .theme-info h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .theme-info p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        .theme-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+        
+        .theme-stat {
+            text-align: center;
+        }
+        
+        .theme-stat-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--accent-primary);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .theme-stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+    <script src="theme-manager.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="theme-gallery">
+            <a href="index.html" class="back-to-dashboard">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Back to Dashboard
+            </a>
+            
+            <div class="gallery-header">
+                <h1>🎨 Theme Gallery</h1>
+                <p>Choose your perfect color theme for the GreenTrack Dashboard</p>
+            </div>
+            
+            <div class="theme-grid" id="themeGrid">
+                <!-- Themes will be dynamically populated -->
+            </div>
+            
+            <div class="theme-info">
+                <h2>✨ Personalize Your Experience</h2>
+                <p>
+                    GreenTrack offers multiple beautiful color themes to match your style and preferences.
+                    Each theme has been carefully designed with accessibility in mind, ensuring optimal
+                    contrast and readability in both light and dark modes.
+                </p>
+                <div class="theme-stats">
+                    <div class="theme-stat">
+                        <div class="theme-stat-value">7</div>
+                        <div class="theme-stat-label">Themes</div>
+                    </div>
+                    <div class="theme-stat">
+                        <div class="theme-stat-value">2</div>
+                        <div class="theme-stat-label">Modes</div>
+                    </div>
+                    <div class="theme-stat">
+                        <div class="theme-stat-value">14</div>
+                        <div class="theme-stat-label">Combinations</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Wait for theme manager to initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            const themes = [
+                { 
+                    id: 'default', 
+                    name: '🌌 Default Purple', 
+                    description: 'Modern gradient purple design',
+                    colors: ['#667eea', '#764ba2', '#8b5cf6', '#a78bfa']
+                },
+                { 
+                    id: 'ocean', 
+                    name: '🌊 Ocean Blue', 
+                    description: 'Calming oceanic blues',
+                    colors: ['#1976d2', '#2196f3', '#42a5f5', '#64b5f6']
+                },
+                { 
+                    id: 'forest', 
+                    name: '🌲 Forest Green', 
+                    description: 'Nature-inspired earthy greens',
+                    colors: ['#2e7d32', '#388e3c', '#4caf50', '#66bb6a']
+                },
+                { 
+                    id: 'sunset', 
+                    name: '🌅 Sunset Orange', 
+                    description: 'Warm vibrant sunset tones',
+                    colors: ['#e64a19', '#f57c00', '#ff9800', '#ffb74d']
+                },
+                { 
+                    id: 'purple', 
+                    name: '🌙 Purple Night', 
+                    description: 'Mystical deep purples',
+                    colors: ['#6a1b9a', '#7b1fa2', '#9c27b0', '#ab47bc']
+                },
+                { 
+                    id: 'rose', 
+                    name: '🌹 Rose Pink', 
+                    description: 'Elegant rose and pink',
+                    colors: ['#ad1457', '#c2185b', '#e91e63', '#ec407a']
+                },
+                { 
+                    id: 'teal', 
+                    name: '💎 Emerald Teal', 
+                    description: 'Cool teal and cyan',
+                    colors: ['#00695c', '#00796b', '#009688', '#26a69a']
+                }
+            ];
+            
+            const themeGrid = document.getElementById('themeGrid');
+            const currentTheme = themeManager ? themeManager.currentTheme : 'default';
+            
+            themes.forEach(theme => {
+                const card = document.createElement('div');
+                card.className = 'theme-preview-card';
+                if (theme.id === currentTheme) {
+                    card.classList.add('active');
+                }
+                
+                card.innerHTML = `
+                    <div class="theme-preview-header">
+                        <h3>${theme.name}</h3>
+                        <span class="theme-active-badge">Active</span>
+                    </div>
+                    
+                    <p class="preview-label" style="margin-bottom: 1rem; text-align: left;">
+                        ${theme.description}
+                    </p>
+                    
+                    <div class="theme-color-palette">
+                        ${theme.colors.map(color => 
+                            `<div class="color-swatch" style="background: ${color};" title="${color}"></div>`
+                        ).join('')}
+                    </div>
+                    
+                    <div class="theme-preview-content">
+                        <div class="preview-aqi">42</div>
+                        <div class="preview-label">Good Air Quality</div>
+                    </div>
+                    
+                    <button class="theme-apply-btn" onclick="applyThemeFromGallery('${theme.id}', '${theme.name}')">
+                        ${theme.id === currentTheme ? '✓ Current Theme' : 'Apply Theme'}
+                    </button>
+                `;
+                
+                themeGrid.appendChild(card);
+            });
+        });
+        
+        function applyThemeFromGallery(themeId, themeName) {
+            if (themeManager) {
+                themeManager.applyTheme(themeId);
+                
+                // Update active states
+                document.querySelectorAll('.theme-preview-card').forEach(card => {
+                    card.classList.remove('active');
+                });
+                event.target.closest('.theme-preview-card').classList.add('active');
+                
+                // Update button text
+                document.querySelectorAll('.theme-apply-btn').forEach(btn => {
+                    btn.textContent = 'Apply Theme';
+                });
+                event.target.textContent = '✓ Current Theme';
+                
+                // Show success message
+                themeManager.showToast(`${themeName} applied successfully!`, 'success');
+                
+                // Redirect to dashboard after short delay
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+            }
+        }
+    </script>
+</body>
+</html>

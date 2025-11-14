@@ -273,6 +273,7 @@ body::before {
     display: flex;
     align-items: center;
     gap: 1rem;
+    position: relative;
 }
 
 .icon-button {
@@ -294,6 +295,10 @@ body::before {
     border-color: var(--accent-primary);
     color: var(--accent-primary);
     transform: translateY(-2px);
+}
+
+.icon-button:active {
+    transform: translateY(0);
 }
 
 .mobile-menu-toggle {

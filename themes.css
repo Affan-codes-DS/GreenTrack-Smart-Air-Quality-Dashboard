@@ -1,0 +1,488 @@
+/* ============================================
+   GreenTrack Multi-Theme System
+   Additional Color Themes
+   ============================================ */
+
+/* Ocean Blue Theme */
+.theme-ocean {
+    /* Ocean Blue - Calming oceanic colors */
+    --bg-primary: #0a1929;
+    --bg-secondary: #0d2137;
+    --bg-tertiary: #132f4c;
+    --bg-card: linear-gradient(145deg, #0d2137 0%, #0a1929 100%);
+    --bg-card-hover: linear-gradient(145deg, #132f4c 0%, #0d2137 100%);
+    
+    --text-primary: #e3f2fd;
+    --text-secondary: #90caf9;
+    --text-muted: #64b5f6;
+    --text-accent: #42a5f5;
+    
+    --border-color: rgba(33, 150, 243, 0.15);
+    --border-hover: rgba(33, 150, 243, 0.35);
+    
+    --gradient-primary: linear-gradient(135deg, #1976d2 0%, #0288d1 100%);
+    --gradient-secondary: linear-gradient(135deg, #29b6f6 0%, #0288d1 100%);
+    --gradient-success: linear-gradient(135deg, #00acc1 0%, #00bcd4 100%);
+    --gradient-hero: linear-gradient(135deg, rgba(25, 118, 210, 0.1) 0%, rgba(2, 136, 209, 0.05) 100%);
+    
+    --accent-primary: #2196f3;
+    --accent-secondary: #03a9f4;
+    --accent-tertiary: #00bcd4;
+    
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.25);
+    --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.35);
+    --shadow-glow: 0 0 40px rgba(33, 150, 243, 0.35);
+}
+
+.theme-ocean body::before {
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(33, 150, 243, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(3, 169, 244, 0.10) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(0, 188, 212, 0.08) 0%, transparent 50%);
+}
+
+/* Forest Green Theme */
+.theme-forest {
+    /* Forest Green - Nature-inspired earthy tones */
+    --bg-primary: #0d1b0d;
+    --bg-secondary: #132813;
+    --bg-tertiary: #1b371b;
+    --bg-card: linear-gradient(145deg, #132813 0%, #0d1b0d 100%);
+    --bg-card-hover: linear-gradient(145deg, #1b371b 0%, #132813 100%);
+    
+    --text-primary: #e8f5e9;
+    --text-secondary: #a5d6a7;
+    --text-muted: #81c784;
+    --text-accent: #66bb6a;
+    
+    --border-color: rgba(76, 175, 80, 0.15);
+    --border-hover: rgba(76, 175, 80, 0.35);
+    
+    --gradient-primary: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
+    --gradient-secondary: linear-gradient(135deg, #66bb6a 0%, #43a047 100%);
+    --gradient-success: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+    --gradient-hero: linear-gradient(135deg, rgba(56, 142, 60, 0.1) 0%, rgba(46, 125, 50, 0.05) 100%);
+    
+    --accent-primary: #4caf50;
+    --accent-secondary: #66bb6a;
+    --accent-tertiary: #81c784;
+    
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.25);
+    --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.35);
+    --shadow-glow: 0 0 40px rgba(76, 175, 80, 0.35);
+}
+
+.theme-forest body::before {
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(76, 175, 80, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(102, 187, 106, 0.10) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(129, 199, 132, 0.08) 0%, transparent 50%);
+}
+
+/* Sunset Orange Theme */
+.theme-sunset {
+    /* Sunset Orange - Warm vibrant sunset colors */
+    --bg-primary: #1a0f0a;
+    --bg-secondary: #271510;
+    --bg-tertiary: #361b15;
+    --bg-card: linear-gradient(145deg, #271510 0%, #1a0f0a 100%);
+    --bg-card-hover: linear-gradient(145deg, #361b15 0%, #271510 100%);
+    
+    --text-primary: #fff3e0;
+    --text-secondary: #ffcc80;
+    --text-muted: #ffb74d;
+    --text-accent: #ffa726;
+    
+    --border-color: rgba(255, 152, 0, 0.15);
+    --border-hover: rgba(255, 152, 0, 0.35);
+    
+    --gradient-primary: linear-gradient(135deg, #f57c00 0%, #e64a19 100%);
+    --gradient-secondary: linear-gradient(135deg, #ff9800 0%, #ff5722 100%);
+    --gradient-success: linear-gradient(135deg, #ff6f00 0%, #f57c00 100%);
+    --gradient-hero: linear-gradient(135deg, rgba(245, 124, 0, 0.1) 0%, rgba(230, 74, 25, 0.05) 100%);
+    
+    --accent-primary: #ff9800;
+    --accent-secondary: #ff6f00;
+    --accent-tertiary: #ff5722;
+    
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.25);
+    --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.35);
+    --shadow-glow: 0 0 40px rgba(255, 152, 0, 0.35);
+}
+
+.theme-sunset body::before {
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(255, 152, 0, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 111, 0, 0.10) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(255, 87, 34, 0.08) 0%, transparent 50%);
+}
+
+/* Purple Night Theme */
+.theme-purple {
+    /* Purple Night - Mystical purple nighttime */
+    --bg-primary: #120a1a;
+    --bg-secondary: #1a0f27;
+    --bg-tertiary: #241536;
+    --bg-card: linear-gradient(145deg, #1a0f27 0%, #120a1a 100%);
+    --bg-card-hover: linear-gradient(145deg, #241536 0%, #1a0f27 100%);
+    
+    --text-primary: #f3e5f5;
+    --text-secondary: #ce93d8;
+    --text-muted: #ba68c8;
+    --text-accent: #ab47bc;
+    
+    --border-color: rgba(156, 39, 176, 0.15);
+    --border-hover: rgba(156, 39, 176, 0.35);
+    
+    --gradient-primary: linear-gradient(135deg, #7b1fa2 0%, #6a1b9a 100%);
+    --gradient-secondary: linear-gradient(135deg, #9c27b0 0%, #8e24aa 100%);
+    --gradient-success: linear-gradient(135deg, #ab47bc 0%, #9c27b0 100%);
+    --gradient-hero: linear-gradient(135deg, rgba(123, 31, 162, 0.1) 0%, rgba(106, 27, 154, 0.05) 100%);
+    
+    --accent-primary: #9c27b0;
+    --accent-secondary: #ab47bc;
+    --accent-tertiary: #ba68c8;
+    
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.25);
+    --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.35);
+    --shadow-glow: 0 0 40px rgba(156, 39, 176, 0.35);
+}
+
+.theme-purple body::before {
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(156, 39, 176, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(171, 71, 188, 0.10) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(186, 104, 200, 0.08) 0%, transparent 50%);
+}
+
+/* Rose Pink Theme */
+.theme-rose {
+    /* Rose Pink - Elegant rose and pink tones */
+    --bg-primary: #1a0a12;
+    --bg-secondary: #270f1b;
+    --bg-tertiary: #361524;
+    --bg-card: linear-gradient(145deg, #270f1b 0%, #1a0a12 100%);
+    --bg-card-hover: linear-gradient(145deg, #361524 0%, #270f1b 100%);
+    
+    --text-primary: #fce4ec;
+    --text-secondary: #f48fb1;
+    --text-muted: #f06292;
+    --text-accent: #ec407a;
+    
+    --border-color: rgba(233, 30, 99, 0.15);
+    --border-hover: rgba(233, 30, 99, 0.35);
+    
+    --gradient-primary: linear-gradient(135deg, #c2185b 0%, #ad1457 100%);
+    --gradient-secondary: linear-gradient(135deg, #e91e63 0%, #d81b60 100%);
+    --gradient-success: linear-gradient(135deg, #ec407a 0%, #e91e63 100%);
+    --gradient-hero: linear-gradient(135deg, rgba(194, 24, 91, 0.1) 0%, rgba(173, 20, 87, 0.05) 100%);
+    
+    --accent-primary: #e91e63;
+    --accent-secondary: #ec407a;
+    --accent-tertiary: #f06292;
+    
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.25);
+    --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.35);
+    --shadow-glow: 0 0 40px rgba(233, 30, 99, 0.35);
+}
+
+.theme-rose body::before {
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(233, 30, 99, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(236, 64, 122, 0.10) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(240, 98, 146, 0.08) 0%, transparent 50%);
+}
+
+/* Emerald Teal Theme */
+.theme-teal {
+    /* Emerald Teal - Cool teal and cyan */
+    --bg-primary: #0a1a1a;
+    --bg-secondary: #0f2727;
+    --bg-tertiary: #153636;
+    --bg-card: linear-gradient(145deg, #0f2727 0%, #0a1a1a 100%);
+    --bg-card-hover: linear-gradient(145deg, #153636 0%, #0f2727 100%);
+    
+    --text-primary: #e0f2f1;
+    --text-secondary: #80cbc4;
+    --text-muted: #4db6ac;
+    --text-accent: #26a69a;
+    
+    --border-color: rgba(0, 150, 136, 0.15);
+    --border-hover: rgba(0, 150, 136, 0.35);
+    
+    --gradient-primary: linear-gradient(135deg, #00897b 0%, #00796b 100%);
+    --gradient-secondary: linear-gradient(135deg, #009688 0%, #00897b 100%);
+    --gradient-success: linear-gradient(135deg, #26a69a 0%, #009688 100%);
+    --gradient-hero: linear-gradient(135deg, rgba(0, 137, 123, 0.1) 0%, rgba(0, 121, 107, 0.05) 100%);
+    
+    --accent-primary: #009688;
+    --accent-secondary: #26a69a;
+    --accent-tertiary: #4db6ac;
+    
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.25);
+    --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.35);
+    --shadow-glow: 0 0 40px rgba(0, 150, 136, 0.35);
+}
+
+.theme-teal body::before {
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(0, 150, 136, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(38, 166, 154, 0.10) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(77, 182, 172, 0.08) 0%, transparent 50%);
+}
+
+/* ============================================
+   Theme Transition Animations
+   ============================================ */
+.theme-transition {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Theme selector styling */
+.theme-selector {
+    position: relative;
+}
+
+/* Theme Dropdown Menu */
+.theme-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    min-width: 220px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xl);
+    padding: 0.5rem;
+    z-index: 1000;
+    animation: slideDown 0.2s ease-out;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.theme-option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.theme-option:hover {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.theme-option.active {
+    background: rgba(99, 102, 241, 0.15);
+}
+
+.theme-color-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.theme-option-name {
+    flex: 1;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.theme-check {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    color: var(--accent-primary);
+}
+
+.theme-option.active .theme-check {
+    opacity: 1;
+}
+
+/* Theme preview dots in selector */
+.theme-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.theme-preview-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+}
+
+/* Light theme adjustments for all themes */
+.theme-light.theme-ocean,
+.theme-light.theme-forest,
+.theme-light.theme-sunset,
+.theme-light.theme-purple,
+.theme-light.theme-rose,
+.theme-light.theme-teal {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
+    --bg-tertiary: #f1f5f9;
+    --bg-card: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+    --bg-card-hover: linear-gradient(145deg, #f1f5f9 0%, #e2e8f0 100%);
+    
+    --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
+    --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.06);
+    --shadow-lg: 0 8px 32px rgba(15, 23, 42, 0.08);
+    --shadow-xl: 0 16px 64px rgba(15, 23, 42, 0.1);
+}
+
+/* Ocean light mode text adjustments */
+.theme-light.theme-ocean {
+    --text-primary: #01579b;
+    --text-secondary: #0277bd;
+    --text-muted: #0288d1;
+}
+
+/* Forest light mode text adjustments */
+.theme-light.theme-forest {
+    --text-primary: #1b5e20;
+    --text-secondary: #2e7d32;
+    --text-muted: #388e3c;
+}
+
+/* Sunset light mode text adjustments */
+.theme-light.theme-sunset {
+    --text-primary: #e65100;
+    --text-secondary: #f57c00;
+    --text-muted: #ff6f00;
+}
+
+/* Purple light mode text adjustments */
+.theme-light.theme-purple {
+    --text-primary: #4a148c;
+    --text-secondary: #6a1b9a;
+    --text-muted: #7b1fa2;
+}
+
+/* Rose light mode text adjustments */
+.theme-light.theme-rose {
+    --text-primary: #880e4f;
+    --text-secondary: #ad1457;
+    --text-muted: #c2185b;
+}
+
+/* Teal light mode text adjustments */
+.theme-light.theme-teal {
+    --text-primary: #004d40;
+    --text-secondary: #00695c;
+    --text-muted: #00796b;
+}
+
+/* Smooth theme change animation overlay */
+@keyframes themeChange {
+    0% { opacity: 0; }
+    50% { opacity: 0.3; }
+    100% { opacity: 0; }
+}
+
+.theme-changing::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: var(--accent-primary);
+    pointer-events: none;
+    z-index: 9999;
+    animation: themeChange 0.5s ease-out;
+}
+
+/* Theme Hint Tooltip */
+.theme-hint {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    z-index: 1001;
+    animation: slideDown 0.3s ease-out, pulse 2s infinite;
+    transition: opacity 0.3s ease;
+}
+
+.theme-hint-content {
+    background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), 0 0 0 3px rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+}
+
+.theme-hint-content::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 20px;
+    width: 12px;
+    height: 12px;
+    background: var(--accent-primary);
+    transform: rotate(45deg);
+}
+
+.theme-hint-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.25rem;
+    line-height: 1;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.theme-hint-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.02);
+    }
+}

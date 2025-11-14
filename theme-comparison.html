@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theme Comparison - GreenTrack</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="modern-styles.css">
+    <link rel="stylesheet" href="themes.css">
+    <style>
+        body {
+            padding: 2rem;
+            background: #0a0e1a;
+        }
+        
+        .comparison-container {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+        
+        .comparison-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+        }
+        
+        .comparison-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
+        .theme-comparison-card {
+            background: linear-gradient(145deg, #1a1f2e 0%, #151a27 100%);
+            border: 2px solid rgba(99, 102, 241, 0.2);
+            border-radius: 20px;
+            padding: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-comparison-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(139, 92, 246, 0.5);
+            box-shadow: 0 20px 60px rgba(99, 102, 241, 0.3);
+        }
+        
+        .comparison-card-header {
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .comparison-card-header h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+        
+        .comparison-card-header p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.875rem;
+        }
+        
+        .comparison-preview {
+            padding: 2rem;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .preview-element {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .preview-aqi-value {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+        
+        .preview-aqi-label {
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .preview-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .preview-stat {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        
+        .preview-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .preview-stat-label {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+        
+        .mode-toggle-demo {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .mode-badge {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        /* Individual theme styling for comparison cards */
+        .comparison-card-default .comparison-preview { background: linear-gradient(145deg, #1a1f2e 0%, #151a27 100%); }
+        .comparison-card-default .preview-aqi-value { color: #8b5cf6; }
+        .comparison-card-default .preview-aqi-label { color: #a78bfa; }
+        .comparison-card-default .mode-badge { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        
+        .comparison-card-ocean .comparison-preview { background: linear-gradient(145deg, #0d2137 0%, #0a1929 100%); }
+        .comparison-card-ocean .preview-aqi-value { color: #2196f3; }
+        .comparison-card-ocean .preview-aqi-label { color: #42a5f5; }
+        .comparison-card-ocean .mode-badge { background: linear-gradient(135deg, #1976d2 0%, #0288d1 100%); color: white; }
+        
+        .comparison-card-forest .comparison-preview { background: linear-gradient(145deg, #132813 0%, #0d1b0d 100%); }
+        .comparison-card-forest .preview-aqi-value { color: #4caf50; }
+        .comparison-card-forest .preview-aqi-label { color: #66bb6a; }
+        .comparison-card-forest .mode-badge { background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%); color: white; }
+        
+        .comparison-card-sunset .comparison-preview { background: linear-gradient(145deg, #271510 0%, #1a0f0a 100%); }
+        .comparison-card-sunset .preview-aqi-value { color: #ff9800; }
+        .comparison-card-sunset .preview-aqi-label { color: #ffb74d; }
+        .comparison-card-sunset .mode-badge { background: linear-gradient(135deg, #f57c00 0%, #e64a19 100%); color: white; }
+        
+        .comparison-card-purple .comparison-preview { background: linear-gradient(145deg, #1a0f27 0%, #120a1a 100%); }
+        .comparison-card-purple .preview-aqi-value { color: #9c27b0; }
+        .comparison-card-purple .preview-aqi-label { color: #ab47bc; }
+        .comparison-card-purple .mode-badge { background: linear-gradient(135deg, #7b1fa2 0%, #6a1b9a 100%); color: white; }
+        
+        .comparison-card-rose .comparison-preview { background: linear-gradient(145deg, #270f1b 0%, #1a0a12 100%); }
+        .comparison-card-rose .preview-aqi-value { color: #e91e63; }
+        .comparison-card-rose .preview-aqi-label { color: #ec407a; }
+        .comparison-card-rose .mode-badge { background: linear-gradient(135deg, #c2185b 0%, #ad1457 100%); color: white; }
+        
+        .comparison-card-teal .comparison-preview { background: linear-gradient(145deg, #0f2727 0%, #0a1a1a 100%); }
+        .comparison-card-teal .preview-aqi-value { color: #009688; }
+        .comparison-card-teal .preview-aqi-label { color: #26a69a; }
+        .comparison-card-teal .mode-badge { background: linear-gradient(135deg, #00897b 0%, #00796b 100%); color: white; }
+        
+        .comparison-footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: linear-gradient(145deg, #1a1f2e 0%, #151a27 100%);
+            border-radius: 20px;
+            border: 2px solid rgba(99, 102, 241, 0.2);
+        }
+        
+        .comparison-footer h2 {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .comparison-footer p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.125rem;
+            margin-bottom: 2rem;
+        }
+        
+        .comparison-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .comparison-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        
+        .comparison-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="comparison-container">
+        <div class="comparison-header">
+            <h1>🎨 Visual Theme Comparison</h1>
+            <p style="font-size: 1.125rem; color: rgba(255, 255, 255, 0.7); margin-top: 0.5rem;">
+                Side-by-side comparison of all 7 color themes
+            </p>
+        </div>
+        
+        <div class="comparison-grid">
+            <!-- Default Purple -->
+            <div class="theme-comparison-card comparison-card-default">
+                <div class="comparison-card-header">
+                    <h3>🌌 Default Purple</h3>
+                    <p>Modern gradient purple design - Original theme</p>
+                </div>
+                <div class="comparison-preview">
+                    <div class="preview-element">
+                        <div class="preview-aqi-value">42</div>
+                        <div class="preview-aqi-label">Good Air Quality</div>
+                    </div>
+                    <div class="preview-stats">
+                        <div class="preview-stat">
+                            <div class="preview-stat-value" style="color: #8b5cf6;">25°C</div>
+                            <div class="preview-stat-label" style="color: #a78bfa;">Temperature</div>
+                        </div>
+                        <div class="preview-stat">
+                            <div class="preview-stat-value" style="color: #8b5cf6;">65%</div>
+                            <div class="preview-stat-label" style="color: #a78bfa;">Humidity</div>
+                        </div>
+                    </div>
+                    <div class="mode-toggle-demo">
+                        <div class="mode-badge">Dark Mode</div>
+                        <div class="mode-badge" style="background: rgba(255, 255, 255, 0.1);">Light Mode</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Ocean Blue -->
+            <div class="theme-comparison-card comparison-card-ocean">
+                <div class="comparison-card-header">
+                    <h3>🌊 Ocean Blue</h3>
+                    <p>Calming oceanic blues - Professional & clean</p>
+                </div>
+                <div class="comparison-preview">
+                    <div class="preview-element">
+                        <div class="preview-aqi-value">42</div>
+                        <div class="preview-aqi-label">Good Air Quality</div>
+                    </div>
+                    <div class="preview-stats">
+                        <div class="preview-stat">
+                            <div class="preview-stat-value" style="color: #2196f3;">25°C</div>
+                            <div class="preview-stat-label" style="color: #42a5f5;">Temperature</div>
+                        </div>
+                        <div class="preview-stat">
+                            <div class="preview-stat-value" style="color: #2196f3;">65%</div>
+                            <div class="preview-stat-label" style="color: #42a5f5;">Humidity</div>
+                        </div>
+                    </div>
+                    <div class="mode-toggle-demo">
+                        <div class="mode-badge">Dark Mode</div>
+                        <div class="mode-badge" style="background: rgba(255, 255, 255, 0.1);">Light Mode</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Forest Green -->
+            <div class="theme-comparison-card comparison-card-forest">
+                <div class="comparison-card-header">
+                    <h3>🌲 Forest Green</h3>
+                    <p>Nature-inspired earthy greens - Eco-friendly</p>
+                </div>
+                <div class="comparison-preview">
+                    <div class="preview-element">
+                        <div class="preview-aqi-value">42</div>
+                        <div class="preview-aqi-label">Good Air Quality</div>
+                    </div>
+                    <div class="preview-stats">
+                        <div class="preview-stat">
+                            <div class="preview-stat-value" style="color: #4caf50;">25°C</div>
+                            <div class="preview-stat-label" style="color: #66bb6a;">Temperature</div>
+                        </div>
+                        <div class="preview-stat">
+                            <div class="preview-stat-value" style="color: #4caf50;">65%</div>
+                            <div class="preview-stat-label" style="color: #66bb6a;">Humidity</div>
+                        </div>
+                    </div>
+                    <div class="mode-toggle-demo">
+                        <div class="mode-badge">Dark Mode</div>
+                        <div class="mode-badge" style="background: rgba(255, 255, 255, 0.1);">Light Mode</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sunset Orange -->
+            <div class="theme-comparison-card comparison-card-sunset">
+                <div class="comparison-card-header">
+                    <h3>🌅 Sunset Orange</h3>
+                    <p>Warm vibrant sunset tones - Energetic & bold</p>
+                </div>
+                <div class="comparison-preview">
+                    <div class="preview-element">
+                        <div class="preview-aqi-value">42</div>
+                        <div class="preview-aqi-label">Good Air Quality</div>
+                    </div>
+                    <div class="preview-stats">
+                        <div class="preview-stat">
+                            <div class="preview-stat-value" style="color: #ff9800;">25°C</div>
+                            <div class="preview-stat-label" style="color: #ffb74d;">Temperature</div>
+                        </div>
+                        <div class="preview-stat">
+                            <div class="preview-stat-value" style="color: #ff9800;">65%</div>
+                            <div class="preview-stat-label" style="color: #ffb74d;">Humidity</div>
+                        </div>
+                    </div>
+                    <div class="mode-toggle-demo">
+                        <div class="mode-badge">Dark Mode</div>
+                        <div class="mode-badge" style="background: rgba(255, 255, 255, 0.1);">Light Mode</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Purple Night -->
+            <div class="theme-comparison-card comparison-card-purple">
+                <div class="comparison-card-header">
+                    <h3>🌙 Purple Night</h3>
+                    <p>Mystical deep purples - Elegant & mysterious</p>
+                </div>
+                <div class="comparison-preview">
+                    <div class="preview-element">
+                        <div class="preview-aqi-value">42</div>
+                        <div class="preview-aqi-label">Good Air Quality</div>
+                    </div>
+                    <div class="preview-stats">
+                        <div class="preview-stat">
+                            <div class="preview-stat-value" style="color: #9c27b0;">25°C</div>
+                            <div class="preview-stat-label" style="color: #ab47bc;">Temperature</div>
+                        </div>
+                        <div class="preview-stat">
+                            <div class="preview-stat-value" style="color: #9c27b0;">65%</div>
+                            <div class="preview-stat-label" style="color: #ab47bc;">Humidity</div>
+                        </div>
+                    </div>
+                    <div class="mode-toggle-demo">
+                        <div class="mode-badge">Dark Mode</div>
+                        <div class="mode-badge" style="background: rgba(255, 255, 255, 0.1);">Light Mode</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Rose Pink -->
+            <div class="theme-comparison-card comparison-card-rose">
+                <div class="comparison-card-header">
+                    <h3>🌹 Rose Pink</h3>
+                    <p>Elegant rose and pink - Soft & modern</p>
+                </div>
+                <div class="comparison-preview">
+                    <div class="preview-element">
+                        <div class="preview-aqi-value">42</div>
+                        <div class="preview-aqi-label">Good Air Quality</div>
+                    </div>
+                    <div class="preview-stats">
+                        <div class="preview-stat">
+                            <div class="preview-stat-value" style="color: #e91e63;">25°C</div>
+                            <div class="preview-stat-label" style="color: #ec407a;">Temperature</div>
+                        </div>
+                        <div class="preview-stat">
+                            <div class="preview-stat-value" style="color: #e91e63;">65%</div>
+                            <div class="preview-stat-label" style="color: #ec407a;">Humidity</div>
+                        </div>
+                    </div>
+                    <div class="mode-toggle-demo">
+                        <div class="mode-badge">Dark Mode</div>
+                        <div class="mode-badge" style="background: rgba(255, 255, 255, 0.1);">Light Mode</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Emerald Teal -->
+            <div class="theme-comparison-card comparison-card-teal">
+                <div class="comparison-card-header">
+                    <h3>💎 Emerald Teal</h3>
+                    <p>Cool teal and cyan - Fresh & balanced</p>
+                </div>
+                <div class="comparison-preview">
+                    <div class="preview-element">
+                        <div class="preview-aqi-value">42</div>
+                        <div class="preview-aqi-label">Good Air Quality</div>
+                    </div>
+                    <div class="preview-stats">
+                        <div class="preview-stat">
+                            <div class="preview-stat-value" style="color: #009688;">25°C</div>
+                            <div class="preview-stat-label" style="color: #26a69a;">Temperature</div>
+                        </div>
+                        <div class="preview-stat">
+                            <div class="preview-stat-value" style="color: #009688;">65%</div>
+                            <div class="preview-stat-label" style="color: #26a69a;">Humidity</div>
+                        </div>
+                    </div>
+                    <div class="mode-toggle-demo">
+                        <div class="mode-badge">Dark Mode</div>
+                        <div class="mode-badge" style="background: rgba(255, 255, 255, 0.1);">Light Mode</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comparison-footer">
+            <h2>Ready to Choose Your Theme?</h2>
+            <p>Each theme is available in both light and dark modes, giving you 14 unique combinations!</p>
+            <div class="comparison-actions">
+                <a href="theme-gallery.html" class="comparison-btn">🎨 Open Theme Gallery</a>
+                <a href="theme-showcase.html" class="comparison-btn" style="background: linear-gradient(135deg, #1976d2 0%, #0288d1 100%);">
+                    👁️ Interactive Showcase
+                </a>
+                <a href="index.html" class="comparison-btn" style="background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);">
+                    📊 Go to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

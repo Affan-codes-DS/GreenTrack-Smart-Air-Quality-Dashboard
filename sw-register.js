@@ -11,12 +11,21 @@ if ('serviceWorker' in navigator) {
           if (newWorker) {
             newWorker.addEventListener('statechange', () => {
               if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                // New version available
-                showUpdateToast();
+                // New version available - auto-reload after 2 seconds
+                console.log('[SW] New version detected, reloading in 2 seconds...');
+                setTimeout(() => {
+                  newWorker.postMessage({ type: 'SKIP_WAITING' });
+                  window.location.reload();
+                }, 2000);
               }
             });
           }
         });
+
+        // Check for updates every 60 seconds
+        setInterval(() => {
+          registration.update();
+        }, 60000);
 
         // Handle messages from service worker
         navigator.serviceWorker.addEventListener('message', (event) => {
@@ -31,15 +40,26 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// Request notification permission
+// Request notification permission - only once per session
 if ('Notification' in window && navigator.serviceWorker) {
-  if (Notification.permission === 'default') {
-    // Ask for permission after user interaction
-    document.addEventListener('click', requestNotificationPermission, { once: true });
+  const hasAskedNotification = sessionStorage.getItem('notification-asked');
+  
+  if (Notification.permission === 'default' && !hasAskedNotification) {
+    // Ask for permission only once per session, after user interaction
+    // Disabled by default - users can enable if they want notifications
+    // document.addEventListener('click', requestNotificationPermission, { once: true });
+    
+    // Mark as asked so we don't prompt again
+    sessionStorage.setItem('notification-asked', 'true');
   }
 }
 
 function requestNotificationPermission() {
+  // Only request if not already asked in this session
+  if (sessionStorage.getItem('notification-asked')) return;
+  
+  sessionStorage.setItem('notification-asked', 'true');
+  
   Notification.requestPermission().then((permission) => {
     if (permission === 'granted') {
       console.log('[SW] Notification permission granted');

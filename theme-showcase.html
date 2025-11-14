@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theme Showcase - GreenTrack</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="modern-styles.css">
+    <link rel="stylesheet" href="themes.css">
+    <style>
+        body {
+            padding: 2rem;
+            overflow-x: hidden;
+        }
+        
+        .showcase-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .showcase-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .showcase-header h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .showcase-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        
+        .showcase-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .showcase-btn:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .showcase-btn.active {
+            background: var(--gradient-primary);
+            color: white;
+            border-color: transparent;
+        }
+        
+        .theme-showcase-grid {
+            display: grid;
+            gap: 2rem;
+        }
+        
+        .theme-showcase-item {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .theme-showcase-item h2 {
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .showcase-demo-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .demo-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .demo-aqi {
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--accent-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .demo-label {
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .demo-button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .demo-button {
+            padding: 0.5rem 1rem;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: var(--radius-md);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .demo-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .demo-stat {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .demo-stat-value {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--accent-primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .demo-stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+        
+        .color-swatches {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .color-swatch-item {
+            text-align: center;
+        }
+        
+        .color-swatch {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius-md);
+            border: 2px solid var(--border-color);
+            margin-bottom: 0.25rem;
+        }
+        
+        .color-name {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+    </style>
+    <script src="theme-manager.js"></script>
+</head>
+<body>
+    <div class="showcase-container">
+        <div class="showcase-header">
+            <h1>🎨 GreenTrack Theme Showcase</h1>
+            <p style="color: var(--text-secondary); font-size: 1.125rem;">
+                Interactive demonstration of all available themes
+            </p>
+        </div>
+        
+        <div class="showcase-controls">
+            <button class="showcase-btn active" onclick="switchShowcaseTheme('default')">
+                🌌 Default
+            </button>
+            <button class="showcase-btn" onclick="switchShowcaseTheme('ocean')">
+                🌊 Ocean
+            </button>
+            <button class="showcase-btn" onclick="switchShowcaseTheme('forest')">
+                🌲 Forest
+            </button>
+            <button class="showcase-btn" onclick="switchShowcaseTheme('sunset')">
+                🌅 Sunset
+            </button>
+            <button class="showcase-btn" onclick="switchShowcaseTheme('purple')">
+                🌙 Purple
+            </button>
+            <button class="showcase-btn" onclick="switchShowcaseTheme('rose')">
+                🌹 Rose
+            </button>
+            <button class="showcase-btn" onclick="switchShowcaseTheme('teal')">
+                💎 Teal
+            </button>
+            <button class="showcase-btn" onclick="themeManager.toggleLightMode()">
+                🌓 Toggle Light/Dark
+            </button>
+        </div>
+        
+        <div class="theme-showcase-grid">
+            <!-- Main Dashboard Elements -->
+            <div class="theme-showcase-item">
+                <h2>📊 Dashboard Elements</h2>
+                <div class="showcase-demo-content">
+                    <div class="demo-card">
+                        <div class="demo-aqi">42</div>
+                        <div class="demo-label">Good AQI</div>
+                    </div>
+                    <div class="demo-card">
+                        <div class="demo-aqi">125</div>
+                        <div class="demo-label">Unhealthy</div>
+                    </div>
+                    <div class="demo-card">
+                        <div class="demo-aqi">250</div>
+                        <div class="demo-label">Very Unhealthy</div>
+                    </div>
+                </div>
+                <div class="demo-button-group">
+                    <button class="demo-button">Primary Action</button>
+                    <button class="demo-button">Secondary Action</button>
+                    <button class="demo-button">Refresh Data</button>
+                </div>
+            </div>
+            
+            <!-- Stats Cards -->
+            <div class="theme-showcase-item">
+                <h2>📈 Statistics Display</h2>
+                <div class="demo-stats">
+                    <div class="demo-stat">
+                        <div class="demo-stat-value">25°C</div>
+                        <div class="demo-stat-label">Temperature</div>
+                    </div>
+                    <div class="demo-stat">
+                        <div class="demo-stat-value">65%</div>
+                        <div class="demo-stat-label">Humidity</div>
+                    </div>
+                    <div class="demo-stat">
+                        <div class="demo-stat-value">3.2</div>
+                        <div class="demo-stat-label">Wind Speed</div>
+                    </div>
+                    <div class="demo-stat">
+                        <div class="demo-stat-value">1013</div>
+                        <div class="demo-stat-label">Pressure</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Color Palette -->
+            <div class="theme-showcase-item">
+                <h2>🎨 Color Palette</h2>
+                <div class="color-swatches" id="colorSwatches">
+                    <!-- Will be populated dynamically -->
+                </div>
+                <p style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.875rem;">
+                    Theme colors are dynamically generated based on the current selection
+                </p>
+            </div>
+            
+            <!-- Typography -->
+            <div class="theme-showcase-item">
+                <h2>📝 Typography & Text</h2>
+                <div style="padding: 1rem;">
+                    <h1 style="color: var(--text-primary); margin-bottom: 0.5rem;">Heading 1 - Primary Text</h1>
+                    <h2 style="color: var(--text-secondary); margin-bottom: 0.5rem;">Heading 2 - Secondary Text</h2>
+                    <h3 style="color: var(--text-muted); margin-bottom: 0.5rem;">Heading 3 - Muted Text</h3>
+                    <p style="color: var(--text-primary); margin-bottom: 0.5rem;">
+                        This is regular paragraph text using primary color for optimal readability.
+                    </p>
+                    <p style="color: var(--text-secondary);">
+                        This is secondary text that provides additional context with slightly less emphasis.
+                    </p>
+                    <p style="color: var(--text-accent); margin-top: 0.5rem;">
+                        Accent text is used for highlights and important information.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 3rem; text-align: center; padding: 2rem; background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+            <h3 style="color: var(--text-primary); margin-bottom: 1rem;">Ready to customize?</h3>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="theme-gallery.html" class="demo-button">Visit Theme Gallery</a>
+                <a href="index.html" class="demo-button">Go to Dashboard</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentShowcaseTheme = 'default';
+        
+        function switchShowcaseTheme(themeId) {
+            if (themeManager) {
+                themeManager.applyTheme(themeId);
+                currentShowcaseTheme = themeId;
+                
+                // Update button states
+                document.querySelectorAll('.showcase-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                event.target.classList.add('active');
+                
+                updateColorSwatches();
+            }
+        }
+        
+        function updateColorSwatches() {
+            const swatchesContainer = document.getElementById('colorSwatches');
+            const style = getComputedStyle(document.body);
+            
+            const colors = [
+                { name: 'Primary Accent', var: '--accent-primary' },
+                { name: 'Secondary Accent', var: '--accent-secondary' },
+                { name: 'Tertiary Accent', var: '--accent-tertiary' },
+                { name: 'Primary Text', var: '--text-primary' },
+                { name: 'Secondary Text', var: '--text-secondary' },
+                { name: 'Muted Text', var: '--text-muted' },
+                { name: 'Background', var: '--bg-primary' },
+                { name: 'Card Background', var: '--bg-secondary' }
+            ];
+            
+            swatchesContainer.innerHTML = colors.map(color => {
+                const value = style.getPropertyValue(color.var);
+                return `
+                    <div class="color-swatch-item">
+                        <div class="color-swatch" style="background: ${value}"></div>
+                        <div class="color-name">${color.name}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Initialize color swatches on load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(updateColorSwatches, 100);
+        });
+        
+        // Update swatches when theme changes
+        document.addEventListener('themeChanged', updateColorSwatches);
+    </script>
+</body>
+</html>
