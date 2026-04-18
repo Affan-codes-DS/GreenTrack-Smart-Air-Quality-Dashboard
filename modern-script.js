@@ -87,13 +87,9 @@ function initLiveSearch() {
             group: opt.parentElement.label || ''
         }));
     
-    console.log(`Loaded ${cities.length} cities for live search`);
-    
     // Show all cities function - show ALL cities, not just 50
     const showAllCities = () => {
         try {
-            console.log('showAllCities called, total cities:', cities.length);
-            
             // Clear results
             resultsDiv.innerHTML = '';
             
@@ -133,8 +129,7 @@ function initLiveSearch() {
             // Append all at once
             resultsDiv.appendChild(fragment);
             resultsDiv.style.display = 'block';
-            
-            console.log(`Successfully rendered ${cityCount} cities`);
+
             attachResultListeners();
         } catch (error) {
             console.error('Error in showAllCities:', error);
@@ -270,6 +265,22 @@ function initLocationDetection() {
             showToast('Geolocation is not supported by your browser', 'error');
             return;
         }
+
+        const applyLocationFallback = (label = 'Your Location') => {
+            if (typeof updateDashboard === 'function') {
+                updateDashboard({
+                    data: {
+                        aqi: null,
+                        city: label,
+                        time: new Date().toISOString(),
+                        pollutants: {},
+                        weather: {},
+                        dominantPollutant: 'N/A'
+                    },
+                    isMock: false
+                });
+            }
+        };
         
         // Show loading state
         locationBtn.innerHTML = '<div style="width: 18px; height: 18px; border: 2px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 0.6s linear infinite;"></div>';
@@ -278,22 +289,18 @@ function initLocationDetection() {
         navigator.geolocation.getCurrentPosition(
             async (position) => {
                 const { latitude, longitude } = position.coords;
+                const apiKey = (window.AQI && AQI.CONFIG && AQI.CONFIG.apiKey) || (typeof CONFIG !== 'undefined' ? CONFIG.apiKey : 'b784e806f701bc0a79adaf50855b32f8acc0d234');
                 
                 try {
                     // Fetch AQI for coordinates
                     const response = await fetch(
-                        `https://api.waqi.info/feed/geo:${latitude};${longitude}/?token=${CONFIG.apiKey}`
+                        `https://api.waqi.info/feed/geo:${latitude};${longitude}/?token=${apiKey}`
                     );
                     const data = await response.json();
+                    const cityName = data?.data?.city?.name || 'Your Location';
                     
-                    if (data.status === 'ok') {
-                        const cityName = data.data.city.name;
-                        
-                        console.log('=== LOCATION API FULL RESPONSE ===');
-                        console.log('Full data.data:', JSON.stringify(data.data, null, 2));
-                        console.log('IAQI object:', data.data.iaqi);
-                        console.log('Available IAQI keys:', data.data.iaqi ? Object.keys(data.data.iaqi) : 'none');
-                        
+                    if (data.status === 'ok' && data.data) {
+
                         // Directly update the dashboard with the location data
                         if (typeof updateDashboard === 'function') {
                             // Extract temperature - check all available fields
@@ -301,7 +308,6 @@ function initLocationDetection() {
                             if (data.data.iaqi) {
                                 if (data.data.iaqi.t && data.data.iaqi.t.v) {
                                     temp = data.data.iaqi.t.v;
-                                    console.log('Temperature from iaqi.t:', temp);
                                 }
                             }
                             
@@ -310,8 +316,7 @@ function initLocationDetection() {
                                 console.warn('Temperature out of range:', temp, '- setting to null');
                                 temp = null;
                             }
-                            
-                            console.log('Final temperature value:', temp);
+
                             
                             // Extract all weather fields - no estimates, keep original data only
                             let humidity = data.data.iaqi && data.data.iaqi.h ? data.data.iaqi.h.v : null;
@@ -359,8 +364,7 @@ function initLocationDetection() {
                                 },
                                 dominantPollutant: data.data.dominentpol || 'N/A'
                             };
-                            
-                            console.log('Processed weather data (with estimates):', processedData.weather);
+
                             updateDashboard({ data: processedData, isMock: false });
                         }
                         
@@ -377,9 +381,13 @@ function initLocationDetection() {
                         
                         // Always show success message with location name
                         showToast(`📍 Showing AQI for: ${cityName}`, 'success');
+                    } else {
+                        applyLocationFallback(cityName);
+                        showToast('Located your position, but AQI data was unavailable', 'warning');
                     }
                 } catch (error) {
                     showToast('Could not fetch location data', 'error');
+                    applyLocationFallback('Your Location');
                 } finally {
                     resetLocationButton(locationBtn);
                 }
@@ -631,11 +639,9 @@ if (!document.getElementById('mobile-menu-styles')) {
 window.updateHealthImpact = (level) => {
     const healthImpact = document.getElementById('healthImpact');
     if (!healthImpact) {
-        console.log('healthImpact element not found');
         return;
     }
-    
-    console.log('updateHealthImpact called with level:', level);
+
     
     const impacts = {
         good: {
@@ -665,7 +671,6 @@ window.updateHealthImpact = (level) => {
     };
     
     const impact = impacts[level] || impacts.moderate;
-    console.log('Using impact for level:', level, impact);
     
     healthImpact.innerHTML = `
         <span style="font-size: 1.5rem;">${impact.icon}</span>
@@ -752,7 +757,6 @@ updateFavoritesPills();
  */
 function initChartControls() {
     const chartButtons = document.querySelectorAll('.chart-btn');
-    console.log('Chart controls initialized, buttons found:', chartButtons.length);
     
     chartButtons.forEach(btn => {
         btn.addEventListener('click', function() {
@@ -763,7 +767,6 @@ function initChartControls() {
             }
             
             const period = this.dataset.period;
-            console.log('Chart period button clicked:', period);
             
             // Update active state
             chartButtons.forEach(b => b.classList.remove('active'));
@@ -806,21 +809,9 @@ function initChartControls() {
             }
             
             // Update chart
-            console.log('Updating chart with new data:', {
-                period: period,
-                labelCount: labels.length,
-                dataPointCount: dataPoints.length,
-                firstLabel: labels[0],
-                lastLabel: labels[labels.length - 1]
-            });
-            
             window.trendChart.data.labels = labels;
             window.trendChart.data.datasets[0].data = dataPoints;
             window.trendChart.update();
-            
-            console.log('Chart updated successfully');
         });
     });
 }
-
-console.log('✨ Modern AQI Dashboard features initialized!');

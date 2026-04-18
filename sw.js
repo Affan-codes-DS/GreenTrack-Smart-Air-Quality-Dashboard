@@ -1,9 +1,9 @@
 // Service Worker for GreenTrack PWA
 // Updated: 2025-11-15 - Fixed dashboard loading in light mode on navigation
-const CACHE_NAME = 'greentrack-v3.0.4';
-const STATIC_CACHE = 'greentrack-static-v3.0.4';
-const DYNAMIC_CACHE = 'greentrack-dynamic-v3.0.4';
-const API_CACHE = 'greentrack-api-v3.0.4';
+const CACHE_NAME = 'greentrack-v3.0.5';
+const STATIC_CACHE = 'greentrack-static-v3.0.5';
+const DYNAMIC_CACHE = 'greentrack-dynamic-v3.0.5';
+const API_CACHE = 'greentrack-api-v3.0.5';
 
 // Static assets to cache
 const STATIC_ASSETS = [

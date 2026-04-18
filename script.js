@@ -102,10 +102,6 @@ async function fetchAQIData(city) {
         const response = await fetch(url);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const json = await response.json();
-        console.log('=== API RESPONSE DEBUG ===');
-        console.log('Full JSON:', json);
-        console.log('json.data:', json.data);
-        console.log('json.data.aqi:', json.data ? json.data.aqi : 'N/A');
         if (json.status !== 'ok') throw new Error('API returned error status');
         const rd = json.data || {};
         // Extract and validate temperature (must be between -50 and 60 Celsius)
@@ -133,10 +129,8 @@ async function fetchAQIData(city) {
             const validPollutants = Object.values(pollutants).filter(v => v !== null && v !== 999);
             if (pollutants.pm25 !== null && pollutants.pm25 !== 999) {
                 finalAqi = pollutants.pm25;
-                console.log('Using PM2.5 value for AQI:', finalAqi);
             } else if (validPollutants.length > 0) {
                 finalAqi = Math.max(...validPollutants);
-                console.log('Using highest pollutant for AQI:', finalAqi);
             } else {
                 finalAqi = null;
                 console.warn('No valid pollutant data available');
@@ -218,8 +212,6 @@ function updateDashboard(dataObj) {
     const data = dataObj.data || dataObj;
     const isMock = dataObj.isMock !== undefined ? dataObj.isMock : false;
     
-    console.log('updateDashboard called with full data:', data);
-    console.log('Weather data specifically:', data.weather);
     
     // Update AQI Value
     const aqiValueElement = document.getElementById('aqiValue');
@@ -228,23 +220,52 @@ function updateDashboard(dataObj) {
     const updateTimeElement = document.getElementById('updateTime');
     const locationElement = document.getElementById('location');
     const dataSourceIndicator = document.getElementById('dataSourceIndicator');
+
+    // Update location and timestamps first so live-location results still render
+    // even when the AQI payload is missing or incomplete.
+    if (locationElement) {
+        locationElement.textContent = data.city || 'Unknown location';
+    }
+
+    const updateDate = new Date(data.time);
+    if (updateTimeElement) {
+        const timeSpan = updateTimeElement.querySelector('span') || updateTimeElement;
+        timeSpan.textContent = `Updated: ${updateDate.toLocaleTimeString()}`;
+    }
+
+    if (dataSourceIndicator) {
+        const indicatorSpan = dataSourceIndicator.querySelector('span') || dataSourceIndicator;
+
+        // Remove existing classes
+        dataSourceIndicator.classList.remove('live', 'demo');
+
+        if (isMock) {
+            dataSourceIndicator.classList.add('demo');
+            indicatorSpan.textContent = 'Demo Data';
+        } else {
+            dataSourceIndicator.classList.add('live');
+            indicatorSpan.textContent = 'Live Data';
+        }
+    }
     
     // Ensure AQI is a valid number
-    console.log('=== AQI DEBUG ===');
-    console.log('Raw data.aqi:', data.aqi);
-    console.log('Type of data.aqi:', typeof data.aqi);
     
     // Check if AQI is actually available
     if (data.aqi === null || data.aqi === undefined || data.aqi === '') {
         console.error('No AQI data available for this location');
-        aqiValueElement.textContent = '--';
-        aqiLabelElement.textContent = 'No Data Available';
+        if (aqiValueElement) {
+            aqiValueElement.textContent = '--';
+        }
+        if (aqiLabelElement) {
+            aqiLabelElement.textContent = 'No Data Available';
+        }
+        updatePollutants(data.pollutants || {});
+        updateWeatherStats(data.weather);
+        setSkeleton(false);
         return;
     }
     
     const aqiValue = parseInt(data.aqi);
-    console.log('Parsed AQI Value:', aqiValue);
-    console.log('City:', data.city);
     
     // Validate AQI is a valid number
     if (isNaN(aqiValue)) {
@@ -288,32 +309,6 @@ function updateDashboard(dataObj) {
         console.debug('Band color apply skipped:', e);
     }
     
-    // Update location and time
-    if (locationElement) {
-        locationElement.textContent = data.city;
-    }
-    
-    const updateDate = new Date(data.time);
-    if (updateTimeElement) {
-        const timeSpan = updateTimeElement.querySelector('span') || updateTimeElement;
-        timeSpan.textContent = `Updated: ${updateDate.toLocaleTimeString()}`;
-    }
-    
-    // Set data source indicator
-    if (dataSourceIndicator) {
-        const indicatorSpan = dataSourceIndicator.querySelector('span') || dataSourceIndicator;
-        
-        // Remove existing classes
-        dataSourceIndicator.classList.remove('live', 'demo');
-        
-        if (isMock) {
-            dataSourceIndicator.classList.add('demo');
-            indicatorSpan.textContent = 'Demo Data';
-        } else {
-            dataSourceIndicator.classList.add('live');
-            indicatorSpan.textContent = 'Live Data';
-        }
-    }
     // Update pollutant values
     updatePollutants(data.pollutants);
     
@@ -327,10 +322,7 @@ function updateDashboard(dataObj) {
     
     // Update health impact if available
     if (typeof window.updateHealthImpact === 'function') {
-        console.log('Calling updateHealthImpact with:', aqiLevel.class);
         window.updateHealthImpact(aqiLevel.class);
-    } else {
-        console.log('updateHealthImpact function not available');
     }
     
     // Check and display alerts
@@ -375,13 +367,7 @@ function updatePollutants(pollutants) {
 // Weather Stats Update Function
 // ============================================
 function updateWeatherStats(weather) {
-    console.log('=== updateWeatherStats called ===');
-    console.log('Weather object:', weather);
-    console.log('Weather type:', typeof weather);
-    console.log('Weather keys:', weather ? Object.keys(weather) : 'null');
-    
     if (!weather || typeof weather !== 'object') {
-        console.log('No valid weather data available - setting placeholders');
         setWeatherPlaceholders();
         return;
     }
@@ -409,20 +395,15 @@ function updateWeatherStats(weather) {
     // Update wind speed - convert m/s to km/h
     const windElement = document.getElementById('windValue');
     if (windElement) {
-        console.log('Wind speed raw value:', weather.windSpeed);
         if (weather.windSpeed !== null && weather.windSpeed !== undefined) {
             const windKmh = (parseFloat(weather.windSpeed) * 3.6).toFixed(1); // Convert m/s to km/h
             const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
             const randomDir = directions[Math.floor(Math.random() * directions.length)];
             const displayText = `${windKmh} km/h ${randomDir}`;
-            console.log('Setting wind to:', displayText);
             windElement.textContent = displayText;
         } else {
-            console.log('Wind speed is null/undefined');
             windElement.textContent = 'N/A';
         }
-    } else {
-        console.log('windValue element not found!');
     }
     
     // Update pressure
@@ -1005,7 +986,6 @@ function setupCitySelector() {
 // Initialization on Page Load
 // ============================================
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('Initializing AQI Dashboard...');
     
     // Initialize chart
     initializeChart();
@@ -1030,34 +1010,38 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
     
-    // Determine city from URL or saved preference
+    // Determine initial city: default to New Delhi on fresh open.
+    // Only explicit query params can override this.
     const params = new URLSearchParams(location.search);
-    let initialCity = params.get('city');
-    if (!initialCity) {
-        const saved = localStorage.getItem('selectedCity');
-        if (saved && saved.trim()) initialCity = saved.trim();
-    }
-    if (initialCity) {
-        CONFIG.defaultCity = initialCity;
-        const citySelect = document.getElementById('citySelect');
-        const locationElement = document.getElementById('location');
-        if (citySelect) {
-            const found = Array.from(citySelect.options).find(opt => opt.value.toLowerCase() === initialCity.toLowerCase());
-            if (found) {
-                citySelect.value = found.value;
-            } else {
-                const cityInput = document.getElementById('cityInput');
-                if (cityInput) {
-                    cityInput.style.display = 'block';
-                    cityInput.value = initialCity;
-                    citySelect.value = 'custom';
-                }
+    const queryCity = (params.get('city') || '').trim();
+    const initialCity = queryCity || CONFIG.defaultCity;
+
+    CONFIG.defaultCity = initialCity;
+
+    const citySelect = document.getElementById('citySelect');
+    const locationElement = document.getElementById('location');
+    if (citySelect) {
+        const found = Array.from(citySelect.options).find(opt => opt.value.toLowerCase() === initialCity.toLowerCase());
+        if (found) {
+            citySelect.value = found.value;
+        } else {
+            const cityInput = document.getElementById('cityInput');
+            if (cityInput) {
+                cityInput.style.display = 'block';
+                cityInput.value = initialCity;
+                citySelect.value = 'custom';
             }
         }
-        if (locationElement) locationElement.textContent = `${initialCity}`;
-        // Ensure URL reflects city for shareability
+    }
+    if (locationElement) locationElement.textContent = `${initialCity}`;
+
+    // Keep cross-page state aligned with current dashboard city.
+    localStorage.setItem('selectedCity', initialCity);
+
+    // Keep URL city only when explicitly provided by query.
+    if (!queryCity) {
         const url = new URL(location.href);
-        url.searchParams.set('city', initialCity);
+        url.searchParams.delete('city');
         history.replaceState({}, '', url);
     }
     
@@ -1079,9 +1063,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Register service worker for PWA
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js').then(() => {
-            console.log('Service Worker registered');
         }).catch(err => {
-            console.log('Service Worker registration failed:', err);
+            console.error('Service Worker registration failed:', err);
         });
     }
     
@@ -1103,7 +1086,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }, 3000);
     });
     
-    console.log('Dashboard initialized successfully!');
 });
 
 // ============================================
@@ -1144,7 +1126,7 @@ if ('PerformanceObserver' in window) {
     const perfObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
             if (entry.entryType === 'largest-contentful-paint') {
-                console.log('LCP:', entry.startTime);
+                // LCP is observed for performance diagnostics.
             }
         }
     });

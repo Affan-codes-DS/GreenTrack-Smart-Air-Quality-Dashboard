@@ -52,6 +52,3 @@
 2. **Gallery**: Visit Theme Gallery (`theme-gallery.html`) for visual preview
 3. **Showcase**: See interactive demo at `theme-showcase.html`
 4. **Keyboard**: Press `T` to toggle light/dark mode
-
-📖 **Full Theme Documentation**: See [THEMES.md](THEMES.md)  
-🎯 **Quick Guide**: See [THEME_GUIDE.md](THEME_GUIDE.md)

@@ -2995,3 +2995,197 @@ html {
         width: 100%;
     }
 }
+
+/* ============================================
+   Premium Navigation Refresh + Global Earth Background
+   Inspired by polished award-site glass navigation aesthetics
+   ============================================ */
+
+:root {
+    --nav-surface-dark: rgba(8, 14, 28, 0.72);
+    --nav-surface-light: rgba(255, 255, 255, 0.78);
+    --nav-pill-dark: rgba(255, 255, 255, 0.045);
+    --nav-pill-light: rgba(15, 23, 42, 0.05);
+}
+
+.main-nav {
+    border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+    background: linear-gradient(180deg, rgba(9, 14, 24, 0.84) 0%, rgba(9, 14, 24, 0.68) 100%);
+    backdrop-filter: blur(16px) saturate(135%);
+    -webkit-backdrop-filter: blur(16px) saturate(135%);
+    box-shadow: 0 16px 40px rgba(2, 6, 23, 0.35);
+    overflow: hidden;
+}
+
+.main-nav::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0));
+    opacity: 0.5;
+}
+
+.main-nav.scrolled {
+    background: linear-gradient(180deg, rgba(8, 13, 23, 0.94) 0%, rgba(8, 13, 23, 0.78) 100%);
+    border-bottom-color: rgba(148, 163, 184, 0.24);
+}
+
+.theme-light .main-nav,
+.theme-light .main-nav.scrolled {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.85) 100%);
+    border-bottom-color: rgba(100, 116, 139, 0.18);
+    box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+}
+
+.top-nav {
+    background: var(--nav-surface-dark);
+    border: 1px solid rgba(148, 163, 184, 0.16);
+    border-radius: 16px;
+    backdrop-filter: blur(14px) saturate(130%);
+    -webkit-backdrop-filter: blur(14px) saturate(130%);
+    box-shadow: 0 14px 35px rgba(2, 6, 23, 0.26);
+    position: relative;
+    overflow: hidden;
+}
+
+.top-nav::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 12% -10%, rgba(14, 165, 233, 0.26), transparent 35%);
+    opacity: 0.7;
+}
+
+.theme-light .top-nav {
+    background: var(--nav-surface-light);
+    border-color: rgba(100, 116, 139, 0.16);
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+}
+
+.nav-container {
+    padding-top: 0.9rem;
+    padding-bottom: 0.9rem;
+}
+
+.nav-menu,
+.nav-links {
+    background: var(--nav-pill-dark);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 999px;
+    padding: 0.35rem;
+    gap: 0.3rem;
+}
+
+.theme-light .nav-menu,
+.theme-light .nav-links {
+    background: var(--nav-pill-light);
+    border-color: rgba(148, 163, 184, 0.25);
+}
+
+.nav-link,
+.nav-links a {
+    border-radius: 999px;
+    padding: 0.6rem 1.05rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    border: 1px solid transparent;
+    position: relative;
+    isolation: isolate;
+}
+
+.nav-link::after,
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 6px;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #22d3ee, #3b82f6, #4f46e5);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.22s ease;
+}
+
+.nav-link:hover,
+.nav-links a:hover {
+    color: var(--text-primary);
+    border-color: rgba(99, 102, 241, 0.28);
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(99, 102, 241, 0.16));
+    transform: translateY(-1px);
+}
+
+.nav-link:hover::after,
+.nav-links a:hover::after,
+.nav-link.active::after,
+.nav-links a.active::after {
+    transform: scaleX(1);
+}
+
+.nav-link.active,
+.nav-links a.active {
+    color: #ffffff;
+    background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 42%, #4f46e5 100%);
+    border-color: rgba(255, 255, 255, 0.35);
+    box-shadow: 0 10px 22px rgba(37, 99, 235, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.nav-brand,
+.top-nav .brand {
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    text-shadow: 0 2px 12px rgba(59, 130, 246, 0.22);
+}
+
+body:not(.no-earth-bg)::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+        radial-gradient(circle at 84% 15%, rgba(56, 189, 248, 0.2) 0%, rgba(56, 189, 248, 0) 43%),
+        linear-gradient(100deg, rgba(10, 20, 40, 0.22) 0%, rgba(10, 20, 40, 0.04) 45%, rgba(10, 20, 40, 0) 70%),
+        url('https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg');
+    background-repeat: no-repeat;
+    background-size: cover, cover, cover;
+    background-position: center, center, center;
+    opacity: 0.22;
+    filter: saturate(1.3) contrast(1.04) brightness(1.02);
+}
+
+.theme-light body:not(.no-earth-bg)::after {
+    opacity: 0.2;
+    filter: saturate(1.2) contrast(0.95) brightness(1.08);
+}
+
+body > * {
+    position: relative;
+    z-index: 1;
+}
+
+@media (max-width: 768px) {
+    .nav-menu,
+    .nav-links {
+        border-radius: 18px;
+        padding: 0.45rem;
+    }
+
+    .nav-menu.mobile-open {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 0.8rem;
+        gap: 0.4rem;
+    }
+
+    body:not(.no-earth-bg)::after {
+        background-size: cover, cover, cover;
+        background-position: center, center, center;
+        opacity: 0.2;
+    }
+}

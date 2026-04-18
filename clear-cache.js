@@ -29,7 +29,7 @@
     }
 
     // Clear localStorage flag for cache version
-    const currentCacheVersion = 'v3.0.4';
+    const currentCacheVersion = 'v3.0.5';
     const lastCacheVersion = localStorage.getItem('cacheVersion');
     
     if (lastCacheVersion !== currentCacheVersion) {
@@ -54,7 +54,7 @@
   // Only run once per session
   if (sessionStorage.getItem('cacheBustingApplied')) return;
   
-  const version = 'v3.0.4';
+  const version = 'v3.0.5';
   const links = document.querySelectorAll('link[rel="stylesheet"]');
   const scripts = document.querySelectorAll('script[src]');
   
@@ -71,4 +71,4 @@
   sessionStorage.setItem('cacheBustingApplied', 'true');
 })();
 
-console.log('[Cache] Cache management initialized - Version 3.0.0');
+console.log('[Cache] Cache management initialized - Version 3.0.5');
